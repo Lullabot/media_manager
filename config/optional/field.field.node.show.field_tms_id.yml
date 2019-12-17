@@ -1,0 +1,19 @@
+uuid: f6abfc61-b693-42d3-a283-93fd46de99cc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_tms_id
+    - node.type.show
+id: node.show.field_tms_id
+field_name: field_tms_id
+entity_type: node
+bundle: show
+label: 'TMS ID'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

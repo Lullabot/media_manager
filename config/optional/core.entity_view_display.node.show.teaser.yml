@@ -1,0 +1,30 @@
+uuid: 5df70ceb-ec91-4baf-8e6c-e40433216707
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.show.field_call_sign
+    - field.field.node.show.field_description_long
+    - field.field.node.show.field_description_short
+    - field.field.node.show.field_media_manager_id
+    - field.field.node.show.field_tms_id
+    - node.type.show
+  module:
+    - user
+id: node.show.teaser
+targetEntityType: node
+bundle: show
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_call_sign: true
+  field_description_long: true
+  field_description_short: true
+  field_media_manager_id: true
+  field_tms_id: true

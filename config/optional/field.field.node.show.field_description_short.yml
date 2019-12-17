@@ -1,0 +1,19 @@
+uuid: 8986f70e-45d5-4ba1-9737-849353f3a65f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_description_short
+    - node.type.show
+id: node.show.field_description_short
+field_name: field_description_short
+entity_type: node
+bundle: show
+label: 'Description Short'
+description: 'Matches to ''description_short'' in Media Manager API for Shows'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

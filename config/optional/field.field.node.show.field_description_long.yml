@@ -1,0 +1,21 @@
+uuid: c0860558-7592-419d-8e88-b93412fa5ed2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_description_long
+    - node.type.show
+  module:
+    - text
+id: node.show.field_description_long
+field_name: field_description_long
+entity_type: node
+bundle: show
+label: 'Description Long'
+description: 'Matches to ''description_long'' in Media Manager API for Shows'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

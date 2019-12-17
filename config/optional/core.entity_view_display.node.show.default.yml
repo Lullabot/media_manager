@@ -1,0 +1,63 @@
+uuid: 425cac52-ed09-439a-a080-a3259231bcc9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.show.field_call_sign
+    - field.field.node.show.field_description_long
+    - field.field.node.show.field_description_short
+    - field.field.node.show.field_media_manager_id
+    - field.field.node.show.field_tms_id
+    - node.type.show
+  module:
+    - text
+    - user
+id: node.show.default
+targetEntityType: node
+bundle: show
+mode: default
+content:
+  field_call_sign:
+    weight: 104
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_description_long:
+    weight: 105
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_description_short:
+    weight: 103
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_media_manager_id:
+    weight: 101
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_tms_id:
+    weight: 102
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden: {  }

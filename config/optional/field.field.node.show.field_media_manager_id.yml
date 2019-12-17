@@ -1,0 +1,19 @@
+uuid: 8f0cbf9b-6252-4bfb-8ff1-f903d262d4d5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_media_manager_id
+    - node.type.show
+id: node.show.field_media_manager_id
+field_name: field_media_manager_id
+entity_type: node
+bundle: show
+label: 'Media Manager ID'
+description: 'Matches to ''id'' in Media Manager API for Shows'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
