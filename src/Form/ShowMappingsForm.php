@@ -112,8 +112,11 @@ class ShowMappingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state): void {
-    $config = $this->config('media_manager.show.mappings');
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $values = $form_state->getValues();
+    $config = $this->config('media_manager.settings');
+
+    $config->set('shows.mappings.call_sign', $form_state->getValue('call_sign'));
 
     $config->save();
 
