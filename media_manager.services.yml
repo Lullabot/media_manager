@@ -1,0 +1,19 @@
+services:
+  media_manager.api_client:
+    class: Drupal\media_manager\ApiClient
+    arguments:
+      - '@config.factory'
+      - '@state'
+  media_manager.show_manager:
+    class: Drupal\media_manager\ShowManager
+    arguments:
+      - '@media_manager.api_client'
+      - '@entity_type.manager'
+      - '@logger.channel.media_manager'
+      - '@queue'
+      - '@state'
+  logger.channel.media_manager:
+    class: Drupal\Core\Logger\LoggerChannel
+    factory: logger.factory:get
+    arguments:
+      - 'media_manager'

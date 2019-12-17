@@ -1,0 +1,27 @@
+api:
+  key: ''
+  secret: ''
+  base_uri: ''
+shows:
+  queue:
+    autoupdate: false
+    autoupdate_interval: 21600
+  last_update: 0
+  drupal_show_content: 'show'
+  mappings:
+    call_sign: 'field_show_is_gpb_original'
+    description_long: 'field_description'
+    description_short: 'field_plain_summary'
+    genre: 'field_genre'
+    id: 'field_pbs_mm_id'
+    links: 'field_social_media_links'
+    nola: 'field_nola'
+    show_mezzanine16x9: 'field_mezzanine_image'
+    show_poster2x3: 'field_poster_image'
+    title: 'title'
+    tms_id: 'field_pbs_tms_id'
+    updated: 'NEED A FIELD_UPDATED'
+video_content:
+  queue:
+    autoupdate: false
+    autoupdate_interval: 43200

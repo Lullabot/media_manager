@@ -1,0 +1,5 @@
+media_manager.settings:
+  route_name: media_manager.settings
+  parent: system.admin_config_media
+  title: PBS Media Manager
+  description: 'Manage global settings for the PBS Media Manager API.'

@@ -1,0 +1,25 @@
+media_manager.settings:
+  path: '/admin/config/media/media-manager'
+  defaults:
+    _form: '\Drupal\media_manager\Form\MediaManagerSettingsForm'
+    _title: 'PBS Media Manager API Settings'
+    _description: 'Manage global settings for the PBS Media Manager API.'
+  requirements:
+    _permission: 'administer site configuration'
+
+media_manager.show_mappings:
+  path: '/admin/config/media/media-manager/show-mappings'
+  defaults:
+    _form: '\Drupal\media_manager\Form\ShowMappingsForm'
+    _title: 'PBS Media Manager API: Show Mappings'
+  requirements:
+    _permission: 'administer site configuration'
+
+media_manager.testing:
+  path: '/admin/config/media/media-manager/test'
+  defaults:
+    _controller: '\Drupal\media_manager\Controller\MediaManagerController::content'
+    _title: 'PBS Media Manager API'
+  requirements:
+    _permission: 'access content'
+

@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @file
+ * Hooks for the Media Manager module.
+ */
+
+use Drupal\media_manager\ShowManager;
+
+/**
+ * Implements hook_cron().
+ *
+ * @see \Drupal\media_manager\Plugin\QueueWorker\ShowsQueueWorker
+ *
+ * @throws \Exception
+ */
+function media_manager_cron() {
+
+  /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
+  $config_factory = \Drupal::service('config.factory');
+  $config = $config_factory->get('media_manager.settings');
+
+  $request_time = Drupal::time()->getRequestTime();
+  $now = new DateTime("@{$request_time}");
+
+  if ($config->get(ShowManager::getAutoUpdateConfigName())) {
+    /** @var \Drupal\media_manager\ShowManager $showManager */
+    $showManager = Drupal::service('media_manager.show_manager');
+
+    $interval = (int) $config->get(ShowManager::getAutoUpdateIntervalConfigName());
+    $diff = $now->getTimestamp() - $showManager->getLastUpdateTime()->getTimestamp();
+
+    if ($diff > $interval) {
+      _media_manager_shows_update_queue();
+    }
+  }
+}
+
+/**
+ * Executes the Shows queue update operation.
+ *
+ * @throws \Exception
+ */
+function _media_manager_shows_update_queue() {
+  /** @var \Drupal\media_manager\ShowManager $showManager */
+  $showManager = Drupal::service('media_manager.show_manager');
+  $showManager->updateQueue();
+}
+
+

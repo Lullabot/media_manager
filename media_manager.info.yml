@@ -1,0 +1,5 @@
+type: module
+name: PBS Media Manager API
+core: 8.x
+description: 'Provides integration with the PBS Media Manager API.'
+configure: media_manager.settings

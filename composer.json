@@ -1,0 +1,9 @@
+{
+    "name": "drupal/media_manager",
+    "description": "PBS API integration",
+    "type": "module",
+    "require": {
+      "openpublicmedia/pbs-media-manager-php": ">=1.0.2"
+    },
+    "license": "GPL-2.0+"
+}
