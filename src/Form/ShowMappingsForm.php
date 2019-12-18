@@ -71,13 +71,10 @@ class ShowMappingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+
     $config = $this->config('media_manager.settings');
 
     $show_content_type = $config->get('shows.drupal_show_content');
-
-    // TODO: for testing
-    $show_content_type = 'article';
-    $pbs_show_fields = $config->get('shows.mappings');
 
     $vocabularies = \Drupal\taxonomy\Entity\Vocabulary::loadMultiple();
     $form['genre_vocabularly'] = [
@@ -96,13 +93,13 @@ class ShowMappingsForm extends ConfigFormBase {
     $article_fields = array_keys($this
       ->entityFieldManager
       ->getFieldDefinitions('node', $show_content_type));
-    array_push($article_fields, 'not used');
+    $pbs_show_fields = $config->get('shows.mappings');
     foreach ($pbs_show_fields as $field_name => $field_value) {
       $form[$field_name] = [
         '#type' => 'select',
         '#title' => $field_name,
         '#options' => $article_fields,
-        '#default_value' => 'not used',
+        '#default_value' => $pbs_show_fields[$field_name],
       ];
     }
 
@@ -116,8 +113,10 @@ class ShowMappingsForm extends ConfigFormBase {
     $values = $form_state->getValues();
     $config = $this->config('media_manager.settings');
 
-    $config->set('shows.mappings.call_sign', $form_state->getValue('call_sign'));
-
+    $pbs_show_fields = $config->get('shows.mappings');
+    foreach ($pbs_show_fields as $field_name => $field_value) {
+      $config->set('shows.mappings.' . $field_name, $values[$field_name]);
+    }
     $config->save();
 
     parent::submitForm($form, $form_state);

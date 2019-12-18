@@ -192,12 +192,14 @@ class MediaManagerSettingsForm extends ConfigFormBase {
       ],
     ];
 
+    $drupal_content_types = array_keys($this->entityTypeManager->getStorage('node_type')->loadMultiple());
+    $content_type_options = array_combine($drupal_content_types, $drupal_content_types);
     $form['shows_queue']['drupal_show_content'] = [
       '#type' => 'select',
       '#title' => $this->t('Drupal Show content type'),
       '#description' => $this->t('Must be a Drupal node.'),
       '#default_value' => $config->get('shows.drupal_show_content'),
-      '#options' => array_keys($this->entityTypeManager->getStorage('node_type')->loadMultiple()),
+      '#options' => $content_type_options,
       '#states' => [
         'visible' => [
           'input[name="shows_queue_enable"]' => ['checked' => TRUE],
@@ -208,7 +210,8 @@ class MediaManagerSettingsForm extends ConfigFormBase {
     $form['shows_queue']['map_fields'] = [
       '#type' => 'link',
       '#title' => $this->t('Map show fields'),
-      '#url' => Url::fromRoute('media_manager.show_mappings', ['destination' => '/media/media-manager']),
+      '#url' => Url::fromRoute('media_manager.show_mappings', [
+        'destination' => 'admin/config/media/media-manager']),
       '#states' => [
         'visible' => [
           'input[name="shows_queue_enable"]' => ['checked' => TRUE],
@@ -223,26 +226,29 @@ class MediaManagerSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
+    $values = $form_state->getValues();
     $config = $this->config('media_manager.settings');
 
-    $config->set(ApiClient::CONFIG_KEY, $form_state->getValue('key'));
-    $config->set(ApiClient::CONFIG_SECRET, $form_state->getValue('secret'));
-    $config->set(
-      ApiClient::CONFIG_BASE_URI,
-      $form_state->getValue('base_uri')
-    );
+    $config->set(ApiClient::CONFIG_KEY, $values['key']);
+    $config->set(ApiClient::CONFIG_SECRET, $values['secret']);
+    $config->set( ApiClient::CONFIG_BASE_URI, $values['base_uri']);
 
-    $config->set(
-      ShowManager::getAutoUpdateConfigName(),
-      $form_state->getValue('shows_queue_enable')
-    );
-
-    if ($form_state->getValue('shows_queue_enable')) {
+    // Do not turn on auto-updates yet.
+    if (1 == 2) {
       $config->set(
-        ShowManager::getAutoUpdateIntervalConfigName(),
-        (int) $form_state->getValue('shows_queue_interval')
+        ShowManager::getAutoUpdateConfigName(),
+        $values['shows_queue_enable']
       );
+
+      if ($form_state->getValue('shows_queue_enable')) {
+        $config->set(
+          ShowManager::getAutoUpdateIntervalConfigName(),
+          (int) $values['shows_queue_interval']
+        );
+      }
     }
+
+    $config->set('shows.drupal_show_content', $values['drupal_show_content']);
 
     $config->save();
 
