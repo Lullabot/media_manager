@@ -90,15 +90,19 @@ class ShowMappingsForm extends ConfigFormBase {
       'id',
     ];
 
-    $article_fields = array_keys($this
+    $show_fields = array_keys($this
       ->entityFieldManager
       ->getFieldDefinitions('node', $show_content_type));
+    $show_field_options = array_combine($show_fields, $show_fields);
+    array_push($show_field_options, ['unused' => 'unused']);
     $pbs_show_fields = $config->get('shows.mappings');
     foreach ($pbs_show_fields as $field_name => $field_value) {
+      $default = !empty($pbs_show_fields[$field_name]) ?
+        $pbs_show_fields[$field_name] : 'unused';
       $form[$field_name] = [
         '#type' => 'select',
         '#title' => $field_name,
-        '#options' => $article_fields,
+        '#options' => $show_field_options,
         '#default_value' => $pbs_show_fields[$field_name],
       ];
     }
