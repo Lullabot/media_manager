@@ -6,6 +6,7 @@ shows:
   queue:
     autoupdate: false
     autoupdate_interval: 21600
+  show_ids: "9763eb84-f67d-4cff-9e59-f8360a83aed8\r\ne8191077-be4d-48a8-9fb5-c8707add799e"
   last_update: 0
   drupal_show_content: 'show'
   mappings:

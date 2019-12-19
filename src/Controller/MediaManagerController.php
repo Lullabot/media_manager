@@ -16,15 +16,18 @@ class MediaManagerController extends ControllerBase {
     # TEST SHOW MANAGER SERVICE #
     #############################
 
+    $config = \Drupal::config('media_manager.settings');
     $showManager = \Drupal::service('media_manager.show_manager');
-    $test_show = $showManager->getShow('9763eb84-f67d-4cff-9e59-f8360a83aed8');
-    $resp = $showManager->addOrUpdateShow($test_show);
+    $show_ids = explode("\r\n", $config->get('shows.show_ids'));
+    foreach($show_ids as $show_id) {
+      $show = $showManager->getShow($show_id);
+      $showManager->addOrUpdateShow($show);
+    }
 
     ###############
     # TEST CLIENT #
     ###############
 
-    $config = \Drupal::config('media_manager.settings');
     $api_key = $config->get('api.key');
     $api_secret = $config->get('api.secret');
     $client = new Client($api_key, $api_secret);

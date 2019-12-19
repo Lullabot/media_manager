@@ -173,6 +173,26 @@ class MediaManagerSettingsForm extends ConfigFormBase {
       '#return_value' => TRUE,
     ];
 
+    // Get a count of current PBS show list.
+    $show_ids = $config->get('shows.show_ids');
+    $show_count = 0;
+    if (!empty($show_ids)) {
+      $show_ids_array = explode("\n", $show_ids);
+      $show_count = count($show_ids_array);
+    }
+    $form['shows_queue']['show_ids'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Media Manager Show IDs'),
+      '#default_value' => $show_ids ?? '',
+      '#required' => FALSE,
+      '#description' => $this->t('The list of show IDS (PBS Content IDs) to keep synced with this site. One show ID (e.g. 65b5ac61-6c29-4d0d-bc94-9dd572fd9c64) per line. Current count: @count.', ['@count' => $show_count]),
+      '#states' => [
+        'visible' => [
+          'input[name="shows_queue_enable"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+
     $form['shows_queue']['shows_queue_interval'] = [
       '#type' => 'select',
       '#title' => $this->t('Queue builder update interval'),
@@ -233,22 +253,21 @@ class MediaManagerSettingsForm extends ConfigFormBase {
     $config->set(ApiClient::CONFIG_SECRET, $values['secret']);
     $config->set( ApiClient::CONFIG_BASE_URI, $values['base_uri']);
 
-    // Do not turn on auto-updates yet.
-    if (1 == 2) {
-      $config->set(
-        ShowManager::getAutoUpdateConfigName(),
-        $values['shows_queue_enable']
-      );
-
-      if ($form_state->getValue('shows_queue_enable')) {
-        $config->set(
-          ShowManager::getAutoUpdateIntervalConfigName(),
-          (int) $values['shows_queue_interval']
-        );
-      }
-    }
+    $config->set(
+      ShowManager::getAutoUpdateConfigName(),
+      $values['shows_queue_enable']
+    );
 
     $config->set('shows.drupal_show_content', $values['drupal_show_content']);
+
+    if ($form_state->getValue('shows_queue_enable')) {
+      $config->set(
+        ShowManager::getAutoUpdateIntervalConfigName(),
+        (int) $values['shows_queue_interval']
+      );
+    }
+
+    $config->set('shows.show_ids', $values['show_ids']);
 
     $config->save();
 

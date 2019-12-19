@@ -44,7 +44,8 @@ function media_manager_cron() {
 function _media_manager_shows_update_queue() {
   /** @var \Drupal\media_manager\ShowManager $showManager */
   $showManager = Drupal::service('media_manager.show_manager');
-  $showManager->updateQueue();
+  // TODO: For testing, do not pupulate the queue.
+  // $showManager->updateQueue();
 }
 
 
