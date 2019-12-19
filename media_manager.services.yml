@@ -9,6 +9,7 @@ services:
     arguments:
       - '@media_manager.api_client'
       - '@entity_type.manager'
+      - '@config.factory'
       - '@logger.channel.media_manager'
       - '@queue'
       - '@state'

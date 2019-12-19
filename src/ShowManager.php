@@ -4,6 +4,7 @@ namespace Drupal\media_manager;
 
 use DateTime;
 use DateTimeZone;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -49,6 +50,8 @@ class ShowManager extends ApiContentManagerBase {
    *   Media Manager API client service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   Entity type manager service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
    * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
    *   Logger channel service.
    * @param \Drupal\Core\Queue\QueueFactory $queue_factory
@@ -62,11 +65,12 @@ class ShowManager extends ApiContentManagerBase {
   public function __construct(
     ApiClient $client,
     EntityTypeManagerInterface $entity_type_manager,
+    ConfigFactoryInterface $config_factory,
     LoggerChannelInterface $logger,
     QueueFactory $queue_factory,
     StateInterface $state
   ) {
-    parent::__construct($client, $entity_type_manager, $logger, $queue_factory, $state);
+    parent::__construct($client, $entity_type_manager, $config_factory, $logger, $queue_factory, $state); 
     $this->genres = $this->getGenres();
   }
 
@@ -80,9 +84,8 @@ class ShowManager extends ApiContentManagerBase {
   /**
    * {@inheritdoc}
    */
-  public static function getBundleId(): string {
-    // TODO: Get this configuration from the settings page.
-    return 'article';
+  public function getBundleId(): string {
+    return $this->config->get('shows.drupal_show_content');
   }
 
   /**
@@ -245,7 +248,7 @@ class ShowManager extends ApiContentManagerBase {
       $definition = $this->entityTypeManager->getDefinition(self::getEntityTypeId());
       $storage = $this->entityTypeManager->getStorage(self::getEntityTypeId());
       $nodes = $storage->loadByProperties([
-        $definition->getKey('bundle') => self::getBundleId(),
+        $definition->getKey('bundle') => $this->getBundleId(),
       ] + $properties);
     }
     catch (Exception $e) {
@@ -315,14 +318,25 @@ class ShowManager extends ApiContentManagerBase {
    * @throws \Exception
    */
   public function addOrUpdateShow(object $item): void {
-    $node = $this->getOrCreateNode($item->id, self::getBundleId());
+    $node = $this->getOrCreateNode($item->id, $this->getBundleId());
 
     $attributes = $item->attributes;
     $updated_at = self::getLatestUpdatedAt($item);
     $updated_at->setTimezone(new DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE));
     $images = $this->parseImages($attributes->images);
 
+    // Get the call sign field and value.
+    $call_sign_field = $this->config->get('shows.mappings.call_sign');
+    $stations = array_column($attributes->audience, 'station');
+    $call_sign = '';
+    foreach ($stations as $station) {
+      if (isset($station->type) && $station->type == 'station') {
+        $call_sign = $station->attributes->call_sign;
+      }
+    }
+
     $node->setTitle($attributes->title);
+    $node->set($call_sign_field, $call_sign);
     // $node->set('field_pbs_mm_id', $item->id);
     // $node->set('field_pbs_tms_id', $attributes->tms_id);
 

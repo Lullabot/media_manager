@@ -39,7 +39,8 @@ class VideoContentManager extends ApiContentManagerBase {
   /**
    * {@inheritdoc}
    */
-  public static function getBundleId(): string {
+  public function getBundleId(): string {
+    // TODO: Replace this with configuration value.
     return 'video_content';
   }
 
@@ -128,10 +129,12 @@ class VideoContentManager extends ApiContentManagerBase {
       $since = $this->getLastUpdateTime();
     }
 
+    // Inject this.
+    $showManager = \Drupal::service('media_manager.show_manager');
     $definition = $this->entityTypeManager->getDefinition(self::getEntityTypeId());
     $shows = $this->entityTypeManager->getStorage(self::getEntityTypeId())
       ->loadByProperties([
-        $definition->getKey('bundle') => ShowManager::getBundleId(),
+        $definition->getKey('bundle') => $showManager->getBundleId(),
       ]);
 
     // Rekey the array using Media Manager IDs.
@@ -282,7 +285,7 @@ class VideoContentManager extends ApiContentManagerBase {
     NodeInterface $show = NULL,
     bool $force = FALSE
   ): void {
-    $node = $this->getOrCreateNode($item->id, self::getBundleId());
+    $node = $this->getOrCreateNode($item->id, $this->getBundleId());
 
     if (empty($show)) {
       if ($node->get('field_show_ref')->isEmpty()) {

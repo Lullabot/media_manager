@@ -4,6 +4,7 @@ namespace Drupal\media_manager;
 
 use DateTime;
 use DateTimeZone;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Queue\QueueFactory;
@@ -47,6 +48,13 @@ abstract class ApiContentManagerBase implements ApiContentManagerInterface {
   protected $entityTypeManager;
 
   /**
+   * The media manager settings config.
+   *
+   * @var \Drupal\Core\Config\ImmutableConfig
+   */
+  protected $config;
+
+  /**
    * Media Manager logger.
    *
    * @var \Drupal\Core\Logger\LoggerChannelInterface
@@ -74,6 +82,8 @@ abstract class ApiContentManagerBase implements ApiContentManagerInterface {
    *   Media Manager API client service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   Entity type manager service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
    * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
    *   Logger channel service.
    * @param \Drupal\Core\Queue\QueueFactory $queue_factory
@@ -84,12 +94,14 @@ abstract class ApiContentManagerBase implements ApiContentManagerInterface {
   public function __construct(
     ApiClient $client,
     EntityTypeManagerInterface $entity_type_manager,
+    ConfigFactoryInterface $config_factory,
     LoggerChannelInterface $logger,
     QueueFactory $queue_factory,
     StateInterface $state
   ) {
     $this->client = $client;
     $this->entityTypeManager = $entity_type_manager;
+    $this->config = $config_factory->get('media_manager.settings');
     $this->logger = $logger;
     $this->queueFactory = $queue_factory;
     $this->state = $state;

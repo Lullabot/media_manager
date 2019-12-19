@@ -1,9 +1,15 @@
 {
-    "name": "drupal/media_manager",
-    "description": "PBS API integration",
-    "type": "module",
-    "require": {
-      "openpublicmedia/pbs-media-manager-php": ">=1.0.2"
-    },
-    "license": "GPL-2.0+"
+  "name": "drupal/media_manager",
+  "type": "drupal-module",
+  "description": "PBS API integration",
+  "type": "module",
+  "license": "GPL-2.0+",
+  "keywords": [
+    "Drupal"
+  ],
+  "homepage": "https://github.com/Lullabot/media_manager",
+  "minimum-stability": "dev",
+  "require": {
+    "openpublicmedia/pbs-media-manager-php": ">=1.0.2"
+  }
 }

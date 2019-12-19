@@ -26,7 +26,7 @@ interface ApiContentManagerInterface {
    * @return string
    *   Bundle machine name.
    */
-  public static function getBundleId(): string;
+  public function getBundleId(): string;
 
   /**
    * Gets the queue machine name for the API content type.
@@ -78,7 +78,7 @@ interface ApiContentManagerInterface {
   public function resetLastUpdateTime(): void;
 
   /**
-   * Gets the machine name for the API content type's  auto update config.
+   * Gets the machine name for the API content type's auto update config.
    *
    * @return string
    *   Config machine name.
