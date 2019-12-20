@@ -342,6 +342,8 @@ class ShowManager extends ApiContentManagerBase {
     $node->set($call_sign_field, $call_sign);
     $node->set($mappings['id'], $item->id);
     $node->set($mappings['tms_id'], $attributes->tms_id);
+    $node->set($mappings['description_long'], $attributes->description_long);
+    $node->set($mappings['description_short'], $attributes->description_short);
 
     $node->save();
 
@@ -352,10 +354,6 @@ class ShowManager extends ApiContentManagerBase {
       // $updated_at->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT)
     // );
 
-    // $node->set('field_description', [
-      // 'value' => $attributes->description_long,
-      // 'summary' => $attributes->description_short,
-    // ]);
     // $node->set('field_episode_count', $attributes->episodes_count);
 
     // // Capture the _first_ recognized audience scope based on the field's
