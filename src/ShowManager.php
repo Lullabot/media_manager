@@ -318,15 +318,18 @@ class ShowManager extends ApiContentManagerBase {
    * @throws \Exception
    */
   public function addOrUpdateShow(object $item): void {
-    $node = $this->getOrCreateNode($item->id, $this->getBundleId());
+
+    $node = $this->getOrCreateNode($item->id, $this->getBundleId(), 'shows');
 
     $attributes = $item->attributes;
     $updated_at = self::getLatestUpdatedAt($item);
     $updated_at->setTimezone(new DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE));
     $images = $this->parseImages($attributes->images);
 
+    $mappings = $this->config->get('shows.mappings');
+
     // Get the call sign field and value.
-    $call_sign_field = $this->config->get('shows.mappings.call_sign');
+    $call_sign_field = $mappings['call_sign'];
     $stations = array_column($attributes->audience, 'station');
     $call_sign = '';
     foreach ($stations as $station) {
@@ -337,8 +340,11 @@ class ShowManager extends ApiContentManagerBase {
 
     $node->setTitle($attributes->title);
     $node->set($call_sign_field, $call_sign);
-    // $node->set('field_pbs_mm_id', $item->id);
-    // $node->set('field_pbs_tms_id', $attributes->tms_id);
+    $node->set($mappings['id'], $item->id);
+    $node->set($mappings['tms_id'], $attributes->tms_id);
+
+    $node->save();
+
 
     // TODO: Add an updated field
     // $node->set(
@@ -437,7 +443,6 @@ class ShowManager extends ApiContentManagerBase {
       // $node->setPublished();
     // }
 
-    $node->save();
   }
 
   /**

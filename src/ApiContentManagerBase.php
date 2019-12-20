@@ -25,13 +25,6 @@ abstract class ApiContentManagerBase implements ApiContentManagerInterface {
   use StringTranslationTrait;
 
   /**
-   * The Drupal field name for Media Manager ID.
-   *
-   * TODO: Use the configured value from the settings page.
-   */
-  const ID_FIELD_NAME = 'field_pbs_mm_id';
-
-  /**
    * PBS Media Manager API client wrapper.
    *
    * @var \Drupal\media_manager\ApiClient
@@ -128,15 +121,17 @@ abstract class ApiContentManagerBase implements ApiContentManagerInterface {
    *   Media Manager GUID of the object to get a Node for.
    * @param string $bundle
    *   The bundle type of the item being retrieved.
+   * @param string $resource
+   *   The kind of resource being retrieved.
    *
    * @return \Drupal\node\NodeInterface
    *   The node to use.
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function getOrCreateNode(string $guid, string $bundle): NodeInterface {
+  protected function getOrCreateNode(string $guid, string $bundle, string $resource): NodeInterface {
     $definition = $this->entityTypeManager->getDefinition($this->getEntityTypeId());
-    $node = $this->getNodeByGuid($guid, $bundle);
+    $node = $this->getNodeByGuid($guid, $bundle, $resource);
 
     if (empty($node)) {
       $node = Node::create([
@@ -149,23 +144,39 @@ abstract class ApiContentManagerBase implements ApiContentManagerInterface {
   }
 
   /**
+   * Attempts to get Drupal guid field for a resource.
+   *
+   * @param string $resource
+   *   The kind of resource being retrieved.
+   *
+   * @return string|null
+   *   The Drupal ID field of the Media Manager resource or NULL.
+   */
+  public function getNodeGuidField(string $resource) {
+    return $this->config->get($resource . '.mappings.id');
+  }
+
+  /**
    * Attempts to get a local node by a Media Manager ID.
    *
    * @param string $guid
    *   Media Manager GUID of the object to get a Node for.
    * @param string $bundle
    *   The bundle type of the item being retrieved.
+   * @param string $resource
+   *   The kind of resource being retrieved.
    *
    * @return \Drupal\node\NodeInterface|null
    *   Related node or NULL if none found.
    */
-  public function getNodeByGuid(string $guid, string $bundle): ?NodeInterface {
+  public function getNodeByGuid(string $guid, string $bundle, string $resource): ?NodeInterface {
+    $guid_field = $this->getNodeGuidField($resource);
     try {
       $definition = $this->entityTypeManager->getDefinition($this->getEntityTypeId());
       $storage = $this->entityTypeManager->getStorage($this->getEntityTypeId());
       $nodes = $storage->loadByProperties([
         $definition->getKey('bundle') => $bundle,
-        self::ID_FIELD_NAME => $guid,
+        $guid_field => $guid,
       ]);
     }
     catch (Exception $e) {
@@ -179,7 +190,7 @@ abstract class ApiContentManagerBase implements ApiContentManagerInterface {
       if (count($nodes) > 1) {
         $this->logger->error('Multiple nodes found for Media Manager
           ID {id}. Node IDs found: {nid_list}. Updating node {nid}.', [
-            'id' => $id,
+            'id' => $guid,
             'nid_list' => implode(', ', array_keys($nodes)),
             'nid' => $node->id(),
           ]);
@@ -200,7 +211,9 @@ abstract class ApiContentManagerBase implements ApiContentManagerInterface {
    */
   public static function getNodeGuid(NodeInterface $node): ?string {
     try {
-      return $node->get(self::ID_FIELD_NAME)->value;
+      // TODO: Figure out how to get the ID field ($resource above).
+      // return $node->get(self::ID_FIELD_NAME)->value;
+      return $node->get('field_media_manager_id')->value;
     }
     catch (Exception $e) {
       return NULL;
