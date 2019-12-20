@@ -84,26 +84,27 @@ class ShowMappingsForm extends ConfigFormBase {
       '#default_value' => 'not used',
     ];
 
-    // TODO: Use this array to make some fields required below.
+    // TODO: Determine which fields are actually required besides title.
     $required_show_fields = [
-      'tms_id',
+      'genre',
       'id',
+      'title',
+      'tms_id',
     ];
 
     $show_fields = array_keys($this
       ->entityFieldManager
       ->getFieldDefinitions('node', $show_content_type));
-    $show_field_options = array_combine($show_fields, $show_fields);
-    // Add a default 'unused' option.
-    array_unshift($show_field_options, ['unused' => 'unused']);
+    $show_field_options = ['unused' => 'unused'] + array_combine($show_fields, $show_fields);
     $pbs_show_fields = $config->get('shows.mappings');
     foreach ($pbs_show_fields as $field_name => $field_value) {
-      $default = !empty($pbs_show_fields[$field_name]) ?
-        $pbs_show_fields[$field_name] : 'unused';
+      $default = !empty($pbs_show_fields[$field_name]) ?? 'unused';
+      $required = in_array($field_name, $required_show_fields) ? TRUE : FALSE;
       $form[$field_name] = [
         '#type' => 'select',
         '#title' => $field_name,
         '#options' => $show_field_options,
+        '#required' => $required,
         '#default_value' => $pbs_show_fields[$field_name],
       ];
     }

@@ -150,7 +150,6 @@ class MediaManagerController extends ControllerBase {
       $episodes = $client->getEpisodes($season_id);
 
         foreach ($episodes as $episode) {
-          // dpm($episode);
           $attributes = $episode->attributes;
           $table['#rows'][] = ['---EPISODE---', '---DATA---'];
           $table['#rows'][] = ['Episode Title', $attributes->title];

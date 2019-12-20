@@ -338,12 +338,27 @@ class ShowManager extends ApiContentManagerBase {
       }
     }
 
+    if (empty($attributes->title)) {
+      return;
+    }
     $node->setTitle($attributes->title);
-    $node->set($call_sign_field, $call_sign);
-    $node->set($mappings['id'], $item->id);
-    $node->set($mappings['tms_id'], $attributes->tms_id);
-    $node->set($mappings['description_long'], $attributes->description_long);
-    $node->set($mappings['description_short'], $attributes->description_short);
+    if (!empty($call_sign_field) && $mappings['call_sign'] != 'unused') {
+      $node->set($call_sign_field, $call_sign);
+    }
+    if (!empty($item->id) && $mappings['id'] != 'unused') {
+      $node->set($mappings['id'], $item->id);
+    }
+    if (!empty($attributes->tms_id) && $mappings['tms_id'] != 'unused') {
+      $node->set($mappings['tms_id'], $attributes->tms_id);
+    }
+    if (!empty($attributes->description_long) &&
+        $mappings['description_long'] != 'unused') {
+      $node->set($mappings['description_long'], $attributes->description_long);
+    }
+    if (!empty($attributes->description_short) &&
+        $mappings['description_short'] != 'unused') {
+      $node->set($mappings['description_short'], $attributes->description_short);
+    }
 
     $node->save();
 
