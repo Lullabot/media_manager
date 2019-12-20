@@ -70,8 +70,9 @@ CONFIGURATION
 ROADMAP
 -------
 
-* Create drush commands to add or update shows, seasons, and episodes
+* Determine while updating show nodes throws an error.
 * Add more fields to map for Show
+* Create drush commands to add or update shows, seasons, and episodes
 * Create configuration and import support for Season and Episode
 * Determine how long important lots of data will take
 * Add a separate section specifically to handle deleting content
