@@ -21,7 +21,9 @@ class MediaManagerController extends ControllerBase {
     $show_ids = explode("\r\n", $config->get('shows.show_ids'));
     foreach($show_ids as $show_id) {
       $show = $showManager->getShow($show_id);
-      $showManager->addOrUpdateShow($show);
+      if(is_object($show)) {
+        $showManager->addOrUpdateShow($show);
+      }
     }
 
     ###############
