@@ -2,7 +2,6 @@
   "name": "drupal/media_manager",
   "type": "drupal-module",
   "description": "PBS API integration",
-  "type": "module",
   "license": "GPL-2.0+",
   "keywords": [
     "Drupal"
